@@ -79,35 +79,6 @@ class Tile:
         return False
 
 
-# def get_neighbors(tile, grid):
-#     neighbors = []
-#     if (
-#         tile.grid_pos[0] < GRID_SIZE[0] - 1
-#         and grid[tile.grid_pos[0] + 1][tile.grid_pos[1]].type != BARRIER_TYPE
-#     ):  # DOWN
-#         neighbors.append(grid[tile.grid_pos[0] + 1][tile.grid_pos[1]])
-
-#     if (
-#         tile.grid_pos[0] > 0
-#         and grid[tile.grid_pos[0] - 1][tile.grid_pos[1]].type != BARRIER_TYPE
-#     ):  # UP
-#         neighbors.append(grid[tile.grid_pos[0] - 1][tile.grid_pos[1]])
-
-#     if (
-#         tile.grid_pos[1] < GRID_SIZE[1] - 1
-#         and grid[tile.grid_pos[0]][tile.grid_pos[1] + 1].type != BARRIER_TYPE
-#     ):  # RIGHT
-#         neighbors.append(grid[tile.grid_pos[0]][tile.grid_pos[1] + 1])
-
-#     if (
-#         tile.grid_pos[1] > 0
-#         and grid[tile.grid_pos[0]][tile.grid_pos[1] - 1].type != BARRIER_TYPE
-#     ):  # LEFT
-#         neighbors.append(grid[tile.grid_pos[0]][tile.grid_pos[1] - 1])
-
-#     return neighbors
-
-
 def get_neighbors(tile, grid):
     x, y = tile.grid_pos
     neighbors = [
@@ -118,6 +89,20 @@ def get_neighbors(tile, grid):
         and grid[i][j].type != BARRIER_TYPE
     ]
     return neighbors
+
+
+# def get_neighbors(tile, grid):
+#     x, y = tile.grid_pos
+#     neighbors = [
+#         grid[x + dx][y + dy]
+#         for dx in (-1, 0, 1)
+#         for dy in (-1, 0, 1)
+#         if (dx != 0 or dy != 0)
+#         and 0 <= x + dx < GRID_SIZE[0]
+#         and 0 <= y + dy < GRID_SIZE[1]
+#         and grid[x + dx][y + dy].type != BARRIER_TYPE
+#     ]
+#     return neighbors
 
 
 def manhatten_distance(p1, p2):
@@ -173,9 +158,7 @@ def astar_algorithm(start, end, grid, draw):
 
         open_set_hash.remove(current)
         for neighbor in get_neighbors(current, grid):
-            tentative_g_score = g_score[current] + h(
-                current.grid_pos, neighbor.grid_pos
-            )
+            tentative_g_score = g_score[current] + 1
             if tentative_g_score < g_score[neighbor]:
                 came_from[neighbor] = current
                 g_score[neighbor] = tentative_g_score
@@ -213,11 +196,11 @@ def create_grid():
 def draw_grid_lines(win):
     for i in range(GRID_SIZE[0]):
         pygame.draw.line(
-            win, BLACK, (GRID_SPACING[0] * i, 0), (GRID_SPACING[0] * i, SIZE[1])
+            win, GREY, (GRID_SPACING[0] * i, 0), (GRID_SPACING[0] * i, SIZE[1])
         )
     for i in range(GRID_SIZE[1]):
         pygame.draw.line(
-            win, BLACK, (0, GRID_SPACING[1] * i), (SIZE[0], GRID_SPACING[1] * i)
+            win, GREY, (0, GRID_SPACING[1] * i), (SIZE[0], GRID_SPACING[1] * i)
         )
 
 
